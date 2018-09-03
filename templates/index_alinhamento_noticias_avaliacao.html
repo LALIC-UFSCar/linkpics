@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Link-PICS: Alinhador texto-imagem</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Germania+One" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+
+            background: rgba(135, 206, 250, 0.6);
+        }
+
+
+
+        .left_side {
+            max-width: 400px;
+            margin-left: 10px;
+        }
+
+        .info_url {
+            margin-bottom: 10px;
+            border: solid 2px black;
+            padding: 10px;
+            background: white;
+        }
+
+        .info_manuais {
+            margin-top: 10px;
+            border: solid 2px black;
+            padding: 10px;
+            background: white;
+        }
+
+        .info_experimentos {
+            margin-top: 10px;
+            border: solid 2px black;
+            padding: 10px;
+            background: white;
+            padding-bottom: 0px;
+        }
+
+
+
+        .info_resultados {
+            margin-top: 10px;
+            border: solid 2px black;
+            padding: 10px;
+            background: white;
+        }
+
+        .imagem_alinhamento {
+            max-height: 500px;
+            border: solid 4px blue;
+        }
+
+        h1 {
+            text-align: center;
+            color: black;
+            font-size: 54px;
+            padding-top: 15px;
+        }
+
+
+        .text_area_resultados {
+            text-align: left;
+            font-size: 20px;
+        }
+
+        .page-header {
+            background: white;
+            background-image: url("{{url_for('static', filename='lalic_2014.png')}}");
+
+            background-repeat: no-repeat;
+            margin-top: -20px;
+            font-family: 'Germania One', cursive;
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+
+    <div class="page-header">
+
+
+        <h1> Link-PICS: Alinhador texto-imagem</h1>
+
+
+    </div>
+
+
+
+    <div class="main">
+        <div class="col-lg-4 col-xl-4 ">
+
+            <h3>Alinhamento de notícia</h3>
+            <div class="info_url" id="info_url">
+                <form enctype="multipart/form-data" id="uploadform">
+                    <div class="form-group">
+                        <label for="url_folha">Link da página</label>
+
+                        <select class="form-control" id="url_folha">
+
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="fileupload">Escolha o arquivo</label>
+                        <input type="file" id="choosed_file" name="choosed_file">
+                        <div style="margin-top:5px">
+                            <button type="text" id="btnCarregarLinks" class="btn btn-danger">Carregar Links</button>
+                        </div>
+
+                    </div>
+                    <button type="text" id="btnAlignLink" class="btn btn-primary">Alinhamento texto-imagem</button> Similaridade:
+                    <span style="margin: 0 5px 0 5px;"></span>
+                    <input type="radio" value="wup" name="radio_similaridade">WUP</label>
+                    <span style="margin: 0 10px 0 10px;"></span>
+                    <input type="radio" checked value="we" name="radio_similaridade">WE</label>
+                </form>
+            </div>
+            <h3 id="titulo_noticia">Dados da notícia</h3>
+            <div class="info_manuais">
+                <form enctype="multipart/form-data" id="uploadform">
+                    <div class="form-group">
+                        <label for="titulo">Título</label>
+                    </div>
+
+                    <p id="titulo" style="height:60px;"></p>
+
+                    <div class="form-group">
+                        <label for="legenda">Legenda</label>
+                    </div>
+
+                    <p id="legenda" style="height:60px;"></p>
+
+
+                    <div class="form-group">
+                        <label for="texto">Texto</label>
+
+                    </div>
+                    <p id="texto" style="height:400px; overflow-y:scroll"></p>
+            </div>
+
+
+
+            </form>
+        </div>
+    </div>
+
+
+    <div class="col-lg-5 col-xl-5">
+        <div class="display_image">
+            <img class="imagem_alinhamento img-thumbnail" id="img_alinhamento" src="static/black_image.png">
+
+        </div>
+
+        <div class="info_resultados">
+
+         
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Bounding Box</th>
+                        <th>Avaliação - Alinhamento</th>
+                    </tr>
+                </thead>
+                <tbody id="line_resultados">
+
+                </tbody>
+            </table>
+        </div>
+        <button type="text" id="btnFimAvaliacao" style="margin-top:10px" class="btn btn-primary">Finalizar Avaliação</button>
+
+    </div>
+    </div>
+
+    </div>
+
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+    crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+    crossorigin="anonymous"></script>
+
+<script>
+    dic_avaliacao = null;
+    $('#btnAlignLink').click(function (e) {
+        e.preventDefault();
+
+        var img_resultado = document.getElementById("img_alinhamento")
+        img_resultado.setAttribute("src", "static/black_image.png")
+
+        link = $("#url_folha").val();
+
+        if (link == null) {
+            alert('Você deve selecionar um Link!');
+        }
+        else {
+
+            $("#btnAlignLink").prop("disabled", true);
+            $("#btnAlignManual").prop("disabled", true);
+            $("#btnAlignLink").css("cursor", "progress");
+            $("#btnAlignManual").css("cursor", "progress");
+
+            var medida_similaridade;
+            var objetos;
+            var radios = document.getElementsByName("radio_similaridade");
+            for (var i = 0; i < radios.length; i++) {
+                if (radios[i].checked) {
+                    medida_similaridade = radios[i].value;
+                    break;
+                }
+            }
+            if (medida_similaridade == "wup") {
+                objetos = 0;
+            }
+            else if (medida_similaridade == "we") {
+                objetos = 1;
+            }
+
+            var data = {
+                "link": $("#url_folha").val(),
+                "pessoas": 1,
+                "objetos": objetos
+            };
+
+            $.ajax({
+                url: '/alinhamento',
+                data: data,
+                type: 'POST',
+                success: function (response) {
+                    console.log(response);
+                    var obj = JSON.parse(response);
+                    var result_pessoas = obj["result_pessoas"];
+                    result_colums = ''
+
+                    for (const [key, value] of Object.entries(result_pessoas)) {
+                        result_colums += "<tr><td>" + key + "</td><td>" + value + "</td></tr>";
+                    }
+
+                    var result_objetos = obj["result_objetos"];
+
+
+                    for (const [key, value] of Object.entries(result_objetos)) {
+                        result_colums += "<tr><td>" + key + "</td><td>" + value + "</td></tr>";
+                    }
+
+
+                    var body_table = document.getElementById("line_resultados");
+                    body_table.innerHTML = result_colums;
+
+                    var img_resultado = document.getElementById("img_alinhamento")
+                    console.log(obj["img_alinhamento"]);
+                    img_resultado.setAttribute("src", obj["img_alinhamento"])
+
+                    if (obj["img_alinhamento"].length == 0) {
+                        console.log(obj["img_alinhamento"].length)
+                        img_resultado.setAttribute("src", "static/sem_imagem.png")
+                    }
+
+                    //setando o texto
+                    var texto = document.getElementById("texto")
+                    texto.innerHTML = obj["texto"]
+                    //setando a legenda
+                    var legenda = document.getElementById("legenda")
+                    legenda.innerHTML = obj["legenda"]
+                    //setando o titulo
+                    var titulo = document.getElementById("titulo")
+                    titulo.innerHTML = obj["titulo"]
+                    dic_avaliacao = obj["dic_avaliacao"]
+
+
+
+                    $("#btnAlignLink").prop("disabled", false);
+                    $("#btnAlignLink").css("cursor", "default");
+                    $("#btnAlignManual").prop("disabled", false);
+                    $("#btnAlignManual").css("cursor", "default");
+
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+    });
+
+
+    $('#btnFimAvaliacao').click(function (e) {
+        e.preventDefault();
+
+        $("#btnFimAvaliacao").prop("disabled", true);
+        $("#btnFimAvaliacao").css("cursor", "progress");
+        link = $("#url_folha").val();
+
+        if (link == null) {
+            alert('Você deve selecionar um Link!');
+        }
+        else {
+            //alert(document.getElementsByName("radio_sem_alinhamento")[0].checked);
+
+            var avaliacao = {};
+            for (const [key, value] of Object.entries(dic_avaliacao)) {
+                palavra_alinhada = key.replace(" ", "_");
+                var radios = document.getElementsByName("radio_" + palavra_alinhada);
+
+                for (var i = 0; i < radios.length; i++) {
+                    if (radios[i].checked) {
+                        avaliacao[palavra_alinhada] = radios[i].value;
+                    }
+                }
+            }
+
+            var radios = document.getElementsByName("radio_similaridade");
+            var medida_similaridade;
+
+            for (var i = 0; i < radios.length; i++) {
+                if (radios[i].checked) {
+                    medida_similaridade = radios[i].value;
+                    break;
+                }
+            }
+
+            // var alinhamento_invalido;
+            // var radios = document.getElementsByName("radio_sem_alinhamento");
+
+            // for (var i = 0; i < radios.length; i++) {
+            //     if (radios[i].checked) {
+            //         alinhamento_invalido = radios[i].value;
+            //     }
+            // }
+
+            // var selected_pessoas = document.getElementById("pessoas");
+            // var selected_objetos = document.getElementById("objetos");
+            var data = {
+                "link": $("#url_folha").val(),
+                "avaliacao": JSON.stringify(avaliacao),
+                "medida_similaridade": medida_similaridade
+                // "alinhamento_invalido": alinhamento_invalido
+            };
+
+
+            $.ajax({
+                url: '/avaliacao',
+                data: data,
+                type: 'POST',
+                success: function (response) {
+                    console.log(response);
+                    alert("Avaliação enviada!");
+
+
+                    $("#btnFimAvaliacao").prop("disabled", false);
+                    $("#btnFimAvaliacao").css("cursor", "default");
+
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+    });
+
+
+    $('#btnCarregarLinks').click(function (e) {
+        e.preventDefault();
+
+        var form_data = new FormData($("#uploadform")[0]);
+
+
+        // console.log(data['image_choosed']);
+        $.ajax({
+            url: '/upload',
+            data: form_data,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            success: function (response) {
+                // console.log(response);
+                var obj = JSON.parse(response);
+                var result_pessoas = obj["urls"];
+                result_colums = '';
+
+
+                select = document.getElementById('url_folha');
+                removeOptions(select);
+
+                for (i = 0; i < result_pessoas.length; i++) {
+                    var opt = document.createElement('option');
+                    opt.value = result_pessoas[i];
+                    opt.innerHTML = result_pessoas[i];
+                    select.appendChild(opt);
+                }
+
+
+
+
+
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    });
+
+    function removeOptions(selectbox) {
+        var i;
+        for (i = selectbox.options.length - 1; i >= 0; i--) {
+            selectbox.remove(i);
+        }
+    }
+
+  //  <input type="text" class="form-control" value="http://www1.folha.uol.com.br/internacional/en/brazil/2016/05/1767623-olympic-games-will-be-a-major-success-says-rousseff.shtml"
+                          //  id="url_folha" placeholder="Insira o link de uma página da folha internacional">
+
+</script>
+
+</html>

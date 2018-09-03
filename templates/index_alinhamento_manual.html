@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Link-PICS: Alinhador texto-imagem</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Germania+One" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+
+            background: rgba(135, 206, 250, 0.6);
+        }
+
+
+
+        .left_side {
+            max-width: 400px;
+            margin-left: 10px;
+        }
+
+        .info_url {
+            margin-bottom: 10px;
+            border: solid 2px black;
+            padding: 10px;
+            background: white;
+        }
+
+        .info_manuais {
+            margin-top: 10px;
+            border: solid 2px black;
+            padding: 10px;
+            background: white;
+        }
+
+        .info_experimentos {
+            margin-top: 10px;
+            border: solid 2px black;
+            padding: 10px;
+            background: white;
+            padding-bottom: 0px;
+        }
+
+
+
+        .info_resultados {
+            margin-top: 10px;
+            border: solid 2px black;
+            padding: 10px;
+            background: white;
+        }
+
+        .imagem_alinhamento {
+            max-height: 500px;
+            border: solid 4px blue;
+        }
+
+        h1 {
+            text-align: center;
+            color: black;
+            font-size: 54px;
+            padding-top: 15px;
+        }
+
+
+        .text_area_resultados {
+            text-align: left;
+            font-size: 20px;
+        }
+
+        .page-header {
+            background: white;
+            background-image: url("{{url_for('static', filename='lalic_2014.png')}}");
+
+            background-repeat: no-repeat;
+            margin-top: -20px;
+            font-family: 'Germania One', cursive;
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+
+    <div class="page-header">
+
+
+        <h1> Link-PICS: Alinhador texto-imagem</h1>
+
+
+    </div>
+
+
+
+    <div class="main">
+        <div class="col-lg-4 col-xl-4 ">
+
+            <h3>Alinhamento: Folha Internacional</h3>
+            <div class="info_url" id="info_url">
+                <form>
+                    <div class="form-group">
+                        <label for="url_folha">Link da página</label>
+                        <input type="text" class="form-control" value="http://www1.folha.uol.com.br/internacional/en/brazil/2016/05/1767623-olympic-games-will-be-a-major-success-says-rousseff.shtml"
+                            id="url_folha" placeholder="Insira o link de uma página da folha internacional">
+                    </div>
+                    <button type="text" id="btnAlignLink" class="btn btn-primary">Alinhamento texto-imagem</button>
+                </form>
+            </div>
+            <h3>Alinhamento: Crie seus dados</h3>
+            <div class="info_manuais">
+                <form enctype="multipart/form-data" id="uploadform">
+                    <div class="form-group">
+                        <label for="titulo">Título</label>
+                        <input type="text" class="form-control" id="titulo" placeholder="Digite o título da notícia" value="Olympic Games Will Be a Major Success Says Rousseff">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="text">Legenda</label>
+                        <input type="text" class="form-control" id="legenda" placeholder="Digite a legenda da imagem" value="Brazilian volleyball player Fabiana Claudino (L) applauds as Brazilian President Dilma Rousseff holds the Olympic torch">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="texto">Texto</label>
+                        <input type="text" class="form-control" id="texto" placeholder="Digite o texto da notícia" value="Two-time Olympic volleyball champion Fabiana Claudino runs holding the torch, and around her, in the landscape framed by the Planalto Palace, on the left side, and the National Congress, on the right, protesters follow the athlete screaming. They display banners in favor of President Dilma Rousseff and against her.
+
+
+Thus the start of the Olympic torch relay on Tuesday (3), in Brasilia, brought side by side the political crisis in the country and the Olympics, universes that Olympic officials try so much to separate.
+
+
+Before passing the Olympic fire to the first torchbearer on national soil, volleyball player Fabiana, Rousseff said in a speech that the country will be able to successfully promote the Rio Games, in spite of the crisis.
+
+
+Iam sure that in the country, whose people know how to fight for their rights and how to protect democracy, the Olympic Games will be a major success, she said.
+
+
+On the eve of the Senate vote on her impeachment, President Rousseff ended her speech with a political message: What matters is the fight and we know how to fight.
+
+
+After the president, it was the public that, along the torch route, made use of the Olympic Games for political demonstrations.
+
+
+What followed was the transfer of the symbolic Olympic flame from a torch to another along the journey of almost one hour through the Ministries Esplanade, always with groups fighting for space to show their posters to the cameras, including verbal abuse, sometimes with someone being accused of being a "
+                            coup supporter ", other times with someone being called a "layabout ".
+
+
+The flame will go through more 326 cities before arriving in Rio on August 4, the day before the opening of the games.">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fileupload">Imagem</label>
+                        <input type="file" id="choosed_img" name="choosed_img">
+                    </div>
+                    <button type="text" id="btnAlignManual" class="btn btn-primary">Alinhamento texto-imagem</button>
+                </form>
+            </div>
+
+            <div class="info_experimentos">
+                <div class="form-group">
+                    <label for="pessoas">Experimentos:Pessoas</label>
+                    <select class="form-control" id="pessoas">
+                                        <option selected>Pessoa mais próxima do centro + entidade melhor ranqueada</option>
+                                        <option >Módulo DLIB + Google Imagens</option>
+                                        <option>Combinação: Experimentos 1 e 2</option>
+                                  </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="pessoas">Experimentos:Objetos</label>
+                    <select class="form-control" id="objetos">
+                                        <option>Tamanho do objeto com a palavra melhor classificada</option>
+                                        <option>WUP com cada objeto detectado</option>
+                                        <option>WE com cada objeto detectado</option>
+                                        <option>(3 CNN + classe YOLO) -> Se alguma palavra do texto letamizada ou não aparecere entre as 16 sugeridas pelas CNNS</option>
+                                        <option>Experimento 4 + Experimento 2  </option>
+                                        <option>Experimento 4 + Experimento 3</option>
+                                        <option>Experimento 4 + Experimento 3 + Experimento 1</option>
+                                  </select>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="col-lg-5 col-xl-5">
+            <div class="display_image">
+                <img class="imagem_alinhamento img-thumbnail" id="img_alinhamento" src="https://ep00.epimg.net/brasil/imagenes/2016/05/03/politica/1462289848_777414_1462290013_noticia_normal.jpg">
+
+            </div>
+
+            <div class="info_resultados">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Bounding Box</th>
+                            <th>Palavra</th>
+                        </tr>
+                    </thead>
+                    <tbody id="line_resultados">
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    </div>
+
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+    crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+    crossorigin="anonymous"></script>
+
+<script>
+    $('#btnAlignLink').click(function (e) {
+        e.preventDefault();
+
+        $("#btnAlignLink").prop("disabled", true);
+        $("#btnAlignManual").prop("disabled", true);
+        $("#btnAlignLink").css("cursor", "progress");
+        $("#btnAlignManual").css("cursor", "progress");
+
+        var selected_pessoas = document.getElementById("pessoas");
+        var selected_objetos = document.getElementById("objetos");
+        var data = {
+            "link": $("#url_folha").val(),
+            "pessoas": selected_pessoas.selectedIndex,
+            "objetos": selected_objetos.selectedIndex
+        };
+        console.log(data['pessoas']);
+        $.ajax({
+            url: 'http://localhost:5000/alinhamento',
+            data: data,
+            type: 'POST',
+            success: function (response) {
+                console.log(response);
+                var obj = JSON.parse(response);
+                var result_pessoas = obj["result_pessoas"];
+                result_colums = ''
+
+                for (const [key, value] of Object.entries(result_pessoas)) {
+                    console.log(key);
+                    result_colums += "<tr><td>" + key + "</td><td>" + value + "</td></tr>";
+                }
+
+                var result_objetos = obj["result_objetos"];
+
+
+                for (const [key, value] of Object.entries(result_objetos)) {
+                    console.log(key);
+                    result_colums += "<tr><td>" + key + "</td><td>" + value + "</td></tr>";
+                }
+
+
+                var body_table = document.getElementById("line_resultados");
+                body_table.innerHTML = result_colums;
+
+                var img_resultado = document.getElementById("img_alinhamento")
+                img_resultado.setAttribute("src", obj["img_alinhamento"])
+
+                $("#btnAlignLink").prop("disabled", false);
+                $("#btnAlignLink").css("cursor", "default");
+                $("#btnAlignManual").prop("disabled", false);
+                $("#btnAlignManual").css("cursor", "default");
+
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    });
+
+    $('#btnAlignManual').click(function (e) {
+        e.preventDefault();
+
+        $("#btnAlignLink").prop("disabled", true);
+        $("#btnAlignManual").prop("disabled", true);
+        $("#btnAlignLink").css("cursor", "progress");
+        $("#btnAlignManual").css("cursor", "progress");
+
+        var selected_pessoas = document.getElementById("pessoas");
+        var selected_objetos = document.getElementById("objetos");
+
+        var form_data = new FormData($("#uploadform")[0]);
+        form_data.append("pessoas", selected_pessoas.selectedIndex);
+        form_data.append("objetos", selected_objetos.selectedIndex);
+        form_data.append("titulo", $("#titulo").val());
+        form_data.append("legenda", $("#legenda").val());
+        form_data.append("texto", $("#texto").val());
+
+
+        // // console.log(form);
+        // var data = {
+        //     "img": $("#choosed_file").val(),
+        //     "pessoas": "" + selected_pessoas.selectedIndex,
+        //     "objetos": "" + selected_objetos.selectedIndex
+        // };
+        // console.log(data['image_choosed']);
+        $.ajax({
+            url: 'http://localhost:5000/upload',
+            data: form_data,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            success: function (response) {
+                console.log(response);
+                var obj = JSON.parse(response);
+                var result_pessoas = obj["result_pessoas"];
+                result_colums = ''
+
+                for (const [key, value] of Object.entries(result_pessoas)) {
+                    console.log(key);
+                    result_colums += "<tr><td>" + key + "</td><td>" + value + "</td></tr>";
+                }
+
+                var result_objetos = obj["result_objetos"];
+
+
+                for (const [key, value] of Object.entries(result_objetos)) {
+                    console.log(key);
+                    result_colums += "<tr><td>" + key + "</td><td>" + value + "</td></tr>";
+                }
+
+
+                var body_table = document.getElementById("line_resultados");
+                body_table.innerHTML = result_colums;
+
+                // Seta a imagem
+                var img_resultado = document.getElementById("img_alinhamento")
+                img_resultado.src=  obj["img_alinhamento"] + "?" + new Date().getTime();
+
+                $("#btnAlignLink").prop("disabled", false);
+                $("#btnAlignLink").css("cursor", "default");
+                $("#btnAlignManual").prop("disabled", false);
+                $("#btnAlignManual").css("cursor", "default");
+
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    });
+
+</script>
+
+</html>
